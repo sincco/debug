@@ -1,0 +1,22 @@
+{
+    "name": "sincco/debug",
+    "description": "Simple class for debug & logger on PHP",
+    
+    "license": "MIT",
+    "keywords": ["debug","class","sfphp","sincco"],
+    "version": "1.0",
+    "require": {
+        "php": "^5.3.3 || ^7.0"
+    },
+    "authors": [
+        {
+            "name": "Ivan Miranda",
+            "email": "ivan.miranda@sincco.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sincco\\Tools\\": "src"
+        }
+    }
+}
