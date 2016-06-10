@@ -20,6 +20,7 @@ defined('E_USER_DEPRECATED') || define('E_USER_DEPRECATED', 16384);
 class Debug {
 	static protected $reporting = E_ALL;
 	static protected $path 		= __DIR__;
+	static protected $cli 		= 0;
 
 	static public    function reporting ( $reporting = null ) {
 		if ( ! func_num_args() )
@@ -29,18 +30,29 @@ class Debug {
 	static public function path( $path ) {
 		self::$path = $path;
 	}
+	static public function cli( $cli ) {
+		self::$cli = $cli;
+	}
 
 	static public    function log () {
 		$args = func_get_args();
 		if( self::$reporting ) {
-			print( 
-				self::style() . PHP_EOL . '<pre class="debug log">'
-				. implode( 
-					'</pre>' . PHP_EOL . '<pre class="log">' 
-					, array_map( '\Sincco\Tools\Debug::var_export', $args )
-				)
-				. '</pre>'
-			);
+			if( self::$cli )
+				print( 
+					implode( 
+						PHP_EOL
+						, array_map( '\Sincco\Tools\Debug::var_export', $args )
+					) . PHP_EOL
+				);
+			else	
+				print( 
+					self::style() . PHP_EOL . '<pre class="debug log">'
+					. implode( 
+						'</pre>' . PHP_EOL . '<pre class="log">' 
+						, array_map( '\Sincco\Tools\Debug::var_export', $args )
+					)
+					. '</pre>'
+				);
 		} else {
 			$message = PHP_EOL . implode( PHP_EOL, array_map( '\Sincco\Tools\Debug::var_export', $args ) );
 			self::write( $message );
@@ -50,14 +62,22 @@ class Debug {
 	static public function error() {
 		$args = func_get_args();
 		if( self::$reporting ) {
-			print( 
-				self::style() . PHP_EOL . '<pre class="debug log">'
-				. implode( 
-					'</pre>' . PHP_EOL . '<pre class="log">' 
-					, array_map( '\Sincco\Tools\Debug::var_export', $args )
-				)
-				. '</pre>'
-			);
+			if( self::$cli )
+				print( 
+					implode( 
+						PHP_EOL
+						, array_map( '\Sincco\Tools\Debug::var_export', $args )
+					) . PHP_EOL
+				);
+			else	
+				print( 
+					self::style() . PHP_EOL . '<pre class="debug log">'
+					. implode( 
+						'</pre>' . PHP_EOL . '<pre class="log">' 
+						, array_map( '\Sincco\Tools\Debug::var_export', $args )
+					)
+					. '</pre>'
+				);
 		} else {
 			$message = PHP_EOL . implode( PHP_EOL, array_map( '\Sincco\Tools\Debug::var_export', $args ) );
 			self::write( $message, 'err' );
@@ -214,7 +234,10 @@ class Debug {
 			return;
 		foreach ( self::$style as $class => $css )
 			$style .= sprintf( '.%s{%s}', $class, $css );
-		return PHP_EOL . '<style type="text/css">' . $style . '</style>';
+		if( self::$cli )
+			return PHP_EOL;
+		else
+			return PHP_EOL . '<style type="text/css">' . $style . '</style>';
 	}
 	static protected $overload  = array(
 		'__callStatic'   => 2
