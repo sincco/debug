@@ -4,7 +4,7 @@
     
     "license": "MIT",
     "keywords": ["debug","class","sfphp","sincco"],
-    "version": "1.0",
+    "version": "1.0.1",
     "require": {
         "php": "^5.3.3 || ^7.0"
     },
